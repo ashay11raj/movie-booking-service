@@ -2,13 +2,12 @@ package com.movie.moviebookingservice.controller;
 
 
 import com.movie.moviebookingservice.model.City;
+import com.movie.moviebookingservice.model.SelectedSeat;
 import com.movie.moviebookingservice.service.MovieBookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +24,13 @@ public class MovieBookingController {
     {
         logger.info("inside MovieBookingController getMovie method");
         return movieBookingService.getAllMoviesForAllCities();
+    }
+
+    @RequestMapping(path = "/bookmovie", method = RequestMethod.POST)
+    public @ResponseBody SelectedSeat bookMovie(@RequestBody SelectedSeat selectedSeat)
+    {
+        logger.info("inside MovieBookingController bookMovie method");
+
+        return movieBookingService.bookSelectedSeat(selectedSeat);
     }
 }

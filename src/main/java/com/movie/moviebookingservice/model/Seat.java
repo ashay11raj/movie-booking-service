@@ -1,16 +1,31 @@
 package com.movie.moviebookingservice.model;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 public class Seat {
     private int seatNumber;
     private String bookingStatus;
     private int bookingId;
+
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+    private final Lock readLock = readWriteLock.readLock();
+
+    private final Lock writeLock = readWriteLock.writeLock();
 
     public Seat(int seatNumber) {
         this.seatNumber = seatNumber;
     }
 
     public int getSeatNumber() {
-        return seatNumber;
+        readLock.lock();
+        try {
+            return seatNumber;
+        } finally {
+            readLock.unlock();
+        }
     }
 
     public void setSeatNumber(int seatNumber) {
@@ -18,11 +33,21 @@ public class Seat {
     }
 
     public String getBookingStatus() {
-        return bookingStatus;
+        readLock.lock();
+        try {
+            return bookingStatus;
+        } finally {
+            readLock.unlock();
+        }
     }
 
     public void setBookingStatus(String bookingStatus) {
-        this.bookingStatus = bookingStatus;
+        writeLock.lock();
+        try{
+            this.bookingStatus = bookingStatus;
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     public int getBookingId() {
